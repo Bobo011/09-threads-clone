@@ -24,7 +24,7 @@ const LeftSidebar = () => {
             pathname === link.route;
 
           return (
-            <div>
+            <div key={link.label}>
               <Link
                 href={link.route}
                 key={link.label}
