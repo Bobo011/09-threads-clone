@@ -149,6 +149,7 @@ if(pathname === '/profile/edit'){
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -168,6 +169,7 @@ if(pathname === '/profile/edit'){
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -187,6 +189,7 @@ if(pathname === '/profile/edit'){
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -206,6 +209,7 @@ if(pathname === '/profile/edit'){
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
