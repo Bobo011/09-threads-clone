@@ -7,13 +7,13 @@ import { SignOutButton, SignedIn, useAuth } from "@clerk/nextjs";
 
 import { sidebarLinks } from "@/constants";
 
+// Define the LeftSidebar component
 const LeftSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Retrieve the userId from the authenticated user
   const { userId } = useAuth();
-
-
 
   return (
     <section className="custom-scrollbar leftsidebar">
@@ -23,7 +23,8 @@ const LeftSidebar = () => {
             (pathname.includes(link.route) && link.route.length > 1) ||
             pathname === link.route;
 
-            if(link.route === '/profile') link.route=`${link.route}/${userId}`
+          // If the link route is "/profile," append the userId to it
+          if (link.route === "/profile") link.route = `${link.route}/${userId}`;
 
           return (
             <div key={link.label}>
@@ -46,7 +47,8 @@ const LeftSidebar = () => {
       </div>
       <div className="mt-10 px-6">
         <SignedIn>
-          <SignOutButton signOutCallback={()=> router.push('/sign-in')}>
+          {/* Sign Out Button */}
+          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
             <div className="flex cursor-pointer gap-4 p-4">
               <Image
                 src="/assets/logout.svg"

@@ -38,15 +38,18 @@ interface Props {
   accountType: string;
 }
 
+// Define the ThreadsTab component that takes props
 async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
   let result: Result;
 
+  // Fetch data based on the account type (Community or User)
   if (accountType === "Community") {
     result = await fetchCommunityPosts(accountId);
   } else {
     result = await fetchUserPosts(accountId);
   }
 
+  // If there's no result, redirect to the home page
   if (!result) {
     redirect("/");
   }
@@ -54,6 +57,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
   return (
     <section className="mt-9 flex flex-col gap-10">
       {result.threads.map((thread) => (
+        // Render ThreadCard components for each thread in the result
         <ThreadCard
           key={thread._id}
           id={thread._id}
