@@ -1,23 +1,24 @@
 import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
-
 import { communityTabs } from "@/constants";
-
 import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTabs";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 
+// Define an asynchronous function named Page that receives a params object as a prop
 async function Page({ params }: { params: { id: string } }) {
+  // Check if a user is currently authenticated using Clerk
   const user = await currentUser();
-  if (!user) return null;
+  if (!user) return null; // If not authenticated, return null
 
+  // Fetch community details based on the provided params
   const communityDetails = await fetchCommunityDetails(params.id);
 
   return (
     <section>
+      {/* Render a profile header with community details */}
       <ProfileHeader
         accountId={communityDetails.createdBy.id}
         authUserId={user.id}
@@ -29,6 +30,7 @@ async function Page({ params }: { params: { id: string } }) {
       />
 
       <div className="mt-9">
+        {/* Create tabs to switch between content sections */}
         <Tabs defaultValue="threads" className="w-full">
           <TabsList className="tab">
             {communityTabs.map((tab) => (
@@ -42,6 +44,7 @@ async function Page({ params }: { params: { id: string } }) {
                 />
                 <p className="max-sm:hidden">{tab.label}</p>
 
+                {/* Display the count of community threads */}
                 {tab.label === "Threads" && (
                   <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {communityDetails.threads.length}
@@ -52,7 +55,7 @@ async function Page({ params }: { params: { id: string } }) {
           </TabsList>
 
           <TabsContent value="threads" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* Render the ThreadsTab component for community threads */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={communityDetails._id}
@@ -61,6 +64,7 @@ async function Page({ params }: { params: { id: string } }) {
           </TabsContent>
 
           <TabsContent value="members" className="mt-9 w-full text-light-1">
+            {/* Render a list of community members using UserCard */}
             <section className="mt-9 flex flex-col gap-10">
               {communityDetails.members.map((member: any) => (
                 <UserCard
@@ -76,7 +80,7 @@ async function Page({ params }: { params: { id: string } }) {
           </TabsContent>
 
           <TabsContent value="requests" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* Render the ThreadsTab component for community requests */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={communityDetails._id}
@@ -89,4 +93,4 @@ async function Page({ params }: { params: { id: string } }) {
   );
 }
 
-export default Page;
+export default Page; // Export the Page component as the default export

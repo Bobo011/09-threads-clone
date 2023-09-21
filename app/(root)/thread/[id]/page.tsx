@@ -5,62 +5,68 @@ import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/dist/server/api-utils";
 
-const Page = async ({params}:{params:{id:string}})=>{
+// Define an asynchronous arrow function named Page that takes parameters
+const Page = async ({ params }: { params: { id: string } }) => {
+  // Check if a thread ID exists in the parameters, if not, return null
+  if (!params.id) return null;
 
-if(!params.id) return null;
+  // Check if a user is currently authenticated using Clerk
+  const user = await currentUser();
+  if (!user) return null;
 
-const user = await currentUser();
+  // Fetch user information using the provided user's ID
+  const userInfo = await fetchUser(user.id);
 
-if (!user) return null;
+  // If the user is not onboarded, redirect to the onboarding page
+  if (!userInfo?.onboarded) redirect("/onboarding");
 
-const userInfo = await fetchUser(user.id);
+  // Fetch thread information by its ID
+  const thread = await fetchThreadById(params.id);
 
-if (!userInfo?.onboarded) redirect("/onboarding");
-
-const thread = await fetchThreadById(params.id)
-
-return (
-  <section className="relative">
-    <div>
-      <ThreadCard
-        key={thread._id}
-        id={thread._id}
-        currentUserId={user?.id || ""}
-        parentId={thread.parentId}
-        content={thread.text}
-        author={thread.author}
-        community={thread.community}
-        createdAt={thread.createdAt}
-        comments={thread.children}
-      />
-    </div>
-    <div className="mt-7">
-      <Comment
-        threadId={thread.id}
-        currentUserImg={userInfo.image}
-        currentUserId={JSON.stringify(userInfo._id)}
-      />
-    </div>
-
-    <div className="mt-10">
-      {thread.children.map((childItem: any) => (
+  return (
+    <section className="relative">
+      <div>
+        {/* Render a ThreadCard component for the main thread */}
         <ThreadCard
-          key={childItem._id}
-          id={childItem._id}
+          key={thread._id}
+          id={thread._id}
           currentUserId={user?.id || ""}
-          parentId={childItem.parentId}
-          content={childItem.text}
-          author={childItem.author}
-          community={childItem.community}
-          createdAt={childItem.createdAt}
-          comments={childItem.children}
-          isComment
+          parentId={thread.parentId}
+          content={thread.text}
+          author={thread.author}
+          community={thread.community}
+          createdAt={thread.createdAt}
+          comments={thread.children}
         />
-      ))}
-    </div>
-  </section>
-);
-}
+      </div>
+      <div className="mt-7">
+        {/* Render a Comment form for adding comments to the thread */}
+        <Comment
+          threadId={thread.id}
+          currentUserImg={userInfo.image}
+          currentUserId={JSON.stringify(userInfo._id)}
+        />
+      </div>
 
-export default Page
+      <div className="mt-10">
+        {/* Render ThreadCard components for child comments */}
+        {thread.children.map((childItem: any) => (
+          <ThreadCard
+            key={childItem._id}
+            id={childItem._id}
+            currentUserId={user?.id || ""}
+            parentId={childItem.parentId}
+            content={childItem.text}
+            author={childItem.author}
+            community={childItem.community}
+            createdAt={childItem.createdAt}
+            comments={childItem.children}
+            isComment
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 
+export default Page; 

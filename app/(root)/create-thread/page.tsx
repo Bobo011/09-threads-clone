@@ -1,24 +1,26 @@
- import { currentUser } from "@clerk/nextjs";
- import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import PostThread from "@/components/forms/PostThread";
+import { fetchUser } from "@/lib/actions/user.actions";
 
- import PostThread from "@/components/forms/PostThread";
- import { fetchUser } from "@/lib/actions/user.actions";
 
- async function Page() {
-   const user = await currentUser();
-   if (!user) return null;
+async function Page() {
+  // Check if a user is currently authenticated using Clerk
+  const user = await currentUser();
+  if (!user) return null; // If not authenticated, return null
 
-   // fetch organization list created by user
-   const userInfo = await fetchUser(user.id);
-   if (!userInfo?.onboarded) redirect("/onboarding");
+  // Fetch user information
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo?.onboarded) redirect("/onboarding"); // Redirect if not onboarded
 
-   return (
-     <>
-       <h1 className="head-text">Create Thread</h1>
+  return (
+    <>
+      <h1 className="head-text">Create Thread</h1>
 
-       <PostThread userId={userInfo._id} />
-     </>
-   );
- }
+      {/* Render a component for posting a new thread */}
+      <PostThread userId={userInfo._id} />
+    </>
+  );
+}
 
- export default Page;
+export default Page; 
