@@ -1,26 +1,24 @@
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
 import Searchbar from "@/components/shared/Searchbar";
 import Pagination from "@/components/shared/Pagination";
 import CommunityCard from "@/components/cards/CommunityCard";
+
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchCommunities } from "@/lib/actions/community.actions";
-
 
 async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  // Check if a user is currently authenticated using Clerk
   const user = await currentUser();
-  if (!user) return null; // If not authenticated, return null
+  if (!user) return null;
 
-  // Fetch user information
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  // Fetch communities based on search parameters
   const result = await fetchCommunities({
     searchString: searchParams.q,
     pageNumber: searchParams?.page ? +searchParams.page : 1,
@@ -32,7 +30,6 @@ async function Page({
       <h1 className="head-text">Communities</h1>
 
       <div className="mt-5">
-        {/* Render a search bar for communities */}
         <Searchbar routeType="communities" />
       </div>
 
@@ -41,7 +38,6 @@ async function Page({
           <p className="no-result">No Result</p>
         ) : (
           <>
-            {/* Map and render community cards based on fetched data */}
             {result.communities.map((community) => (
               <CommunityCard
                 key={community.id}
@@ -57,7 +53,6 @@ async function Page({
         )}
       </section>
 
-      {/* Render pagination component for navigating through communities */}
       <Pagination
         path="communities"
         pageNumber={searchParams?.page ? +searchParams.page : 1}
@@ -65,6 +60,6 @@ async function Page({
       />
     </>
   );
-}
+};
 
 export default Page; 
