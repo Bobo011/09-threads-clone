@@ -1,98 +1,45 @@
 "use client";
 
-import { z } from "zod";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { usePathname } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-// Import UI components and validation schema
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { usePathname, useRouter } from "next/navigation";
 
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { deleteThread } from "@/lib/actions/thread.actions";
 
-import { CommentValidation } from "@/lib/validations/thread";
-import { addCommentToThread } from "@/lib/actions/thread.actions";
-
-// Define the expected properties for the Comment component
 interface Props {
   threadId: string;
-  currentUserImg: string;
   currentUserId: string;
+  authorId: string;
+  parentId: string | null;
+  isComment?: boolean;
 }
 
-// Define the Comment component
-function Comment({ threadId, currentUserImg, currentUserId }: Props) {
-  // Get the current pathname using the usePathname hook
+function DeleteThread({
+  threadId,
+  currentUserId,
+  authorId,
+  parentId,
+  isComment,
+}: Props) {
   const pathname = usePathname();
+  const router = useRouter();
 
-  // Initialize the form using react-hook-form
-  const form = useForm<z.infer<typeof CommentValidation>>({
-    resolver: zodResolver(CommentValidation),
-    defaultValues: {
-      thread: "",
-    },
-  });
-
-  // Handle form submission
-  const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
-    // Call the addCommentToThread function to add a comment to the thread
-    await addCommentToThread(
-      threadId,
-      values.thread,
-      JSON.parse(currentUserId),
-      pathname
-    );
-
-    // Reset the form after submission
-    form.reset();
-  };
+  if (currentUserId !== authorId || pathname === "/") return null;
 
   return (
-    <Form {...form}>
-      <form className="comment-form" onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Form field for entering a comment */}
-        <FormField
-          control={form.control}
-          name="thread"
-          render={({ field }) => (
-            <FormItem className="flex w-full items-center gap-3">
-              {/* Display the current user's image */}
-              <FormLabel>
-                <Image
-                  src={currentUserImg}
-                  alt="current_user"
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                />
-              </FormLabel>
-              <FormControl className="border-none bg-transparent">
-                {/* Input field for entering a comment */}
-                <Input
-                  type="text"
-                  {...field}
-                  placeholder="Comment..."
-                  className="no-focus text-light-1 outline-none"
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        {/* Submit button for posting the comment */}
-        <Button type="submit" className="comment-form_btn">
-          Reply
-        </Button>
-      </form>
-    </Form>
+    <Image
+      src="/assets/delete.svg"
+      alt="delte"
+      width={18}
+      height={18}
+      className="cursor-pointer object-contain"
+      onClick={async () => {
+        await deleteThread(JSON.parse(threadId), pathname);
+        if (!parentId || !isComment) {
+          router.push("/");
+        }
+      }}
+    />
   );
 }
 
-export default Comment;
+export default DeleteThread;

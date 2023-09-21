@@ -1,50 +1,47 @@
-import "../globals.css"; 
+import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import {
-  Bottombar,
-  LeftSidebar,
-  RightSidebar,
-  Topbar,
-} from "@/components/shared";
+import { dark } from "@clerk/themes";
 
-const inter = Inter({ subsets: ["latin"] }); // Initialize the Inter font with Latin character subset
+import "../globals.css";
+import LeftSidebar from "@/components/shared/LeftSidebar";
+import Bottombar from "@/components/shared/Bottombar";
+import RightSidebar from "@/components/shared/RightSidebar";
+import Topbar from "@/components/shared/Topbar";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Threads", // Metadata for the page title
-  description: "A Next.js 13 Meta Threads application", // Metadata for the page description
+  title: "Threads",
+  description: "A Next.js 13 Meta Threads application",
 };
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode; // Define a functional component named RootLayout that takes children as props
+  children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      {" "}
-      {/* Provide Clerk authentication context */}
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html lang="en">
-        {" "}
-        {/* Define the language for the HTML document */}
         <body className={inter.className}>
-          {" "}
-          {/* Apply the Inter font style to the body */}
-          <Topbar /> {/* Render the top navigation bar component */}
+          <Topbar />
+
           <main className="flex flex-row">
-            {" "}
-            {/* Create the main content container */}
-            <LeftSidebar /> {/* Render the left sidebar component */}
+            <LeftSidebar />
             <section className="main-container">
-              {" "}
-              {/* Create the main content section */}
-              <div className="w-full max-w-4xl">{children}</div>{" "}
-              {/* Render the children (page content) */}
+              <div className="w-full max-w-4xl">{children}</div>
             </section>
-            <RightSidebar /> {/* Render the right sidebar component */}
+            {/* @ts-ignore */}
+            <RightSidebar />
           </main>
-          <Bottombar /> {/* Render the bottom navigation bar component */}
+
+          <Bottombar />
         </body>
       </html>
     </ClerkProvider>

@@ -45,12 +45,10 @@ function ThreadCard({
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
       }`}
     >
-      {/* Container for thread information */}
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
-              {/* Display the author's image */}
               <Image
                 src={author.image}
                 alt="user_community_image"
@@ -64,17 +62,15 @@ function ThreadCard({
 
           <div className="flex w-full flex-col">
             <Link href={`/profile/${author.id}`} className="w-fit">
-              {/* Display the author's name */}
               <h4 className="cursor-pointer text-base-semibold text-light-1">
                 {author.name}
               </h4>
             </Link>
-            {/* Display the thread content */}
+
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
-            {/* Actions for the thread */}
+
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                {/* Display action icons (e.g., like, reply, repost) */}
                 <Image
                   src="/assets/heart-gray.svg"
                   alt="heart"
@@ -106,7 +102,7 @@ function ThreadCard({
                   className="cursor-pointer object-contain"
                 />
               </div>
-              {/* Display the number of replies */}
+
               {isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
@@ -117,7 +113,7 @@ function ThreadCard({
             </div>
           </div>
         </div>
-        {/* DeleteThread component for thread deletion */}
+
         <DeleteThread
           threadId={JSON.stringify(id)}
           currentUserId={currentUserId}
@@ -126,7 +122,7 @@ function ThreadCard({
           isComment={isComment}
         />
       </div>
-      {/* Display user avatars for comments */}
+
       {!isComment && comments.length > 0 && (
         <div className="ml-1 mt-3 flex items-center gap-2">
           {comments.slice(0, 2).map((comment, index) => (
@@ -147,18 +143,17 @@ function ThreadCard({
           </Link>
         </div>
       )}
-      {/* Display thread details (e.g., timestamp, community) */}
+
       {!isComment && community && (
         <Link
           href={`/communities/${community.id}`}
           className="mt-5 flex items-center"
         >
-          {/* Display the timestamp and community name */}
           <p className="text-subtle-medium text-gray-1">
             {formatDateString(createdAt)}
             {community && ` - ${community.name} Community`}
           </p>
-          {/* Display the community image */}
+
           <Image
             src={community.image}
             alt={community.name}

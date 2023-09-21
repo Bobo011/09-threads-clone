@@ -1,25 +1,24 @@
+import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { fetchUser } from "@/lib/actions/user.actions";
+
+import { profileTabs } from "@/constants";
+
+import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
-import { profileTabs } from "@/constants";
-import ThreadsTabs from "@/components/shared/ThreadsTabs";
 
+import { fetchUser } from "@/lib/actions/user.actions";
 
-const Page = async ({ params }: { params: { id: string } }) => {
-  // Check if a user is currently authenticated using Clerk
+async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
-  if (!user) return null; // If not authenticated, return null
+  if (!user) return null;
 
-  // Fetch user information using the provided 'id' parameter
   const userInfo = await fetchUser(params.id);
-  if (!userInfo?.onboarded) redirect("/onboarding"); // Redirect if not onboarded
+  if (!userInfo?.onboarded) redirect("/onboarding");
 
   return (
     <section>
-      {/* Render a profile header component with user information */}
       <ProfileHeader
         accountId={userInfo.id}
         authUserId={user.id}
@@ -30,11 +29,9 @@ const Page = async ({ params }: { params: { id: string } }) => {
       />
 
       <div className="mt-9">
-        {/* Render tabs for user profile sections */}
         <Tabs defaultValue="threads" className="w-full">
           <TabsList className="tab">
             {profileTabs.map((tab) => (
-              // Render tab triggers with icons and labels
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
                 <Image
                   src={tab.icon}
@@ -45,24 +42,22 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 />
                 <p className="max-sm:hidden">{tab.label}</p>
 
-                {/* Render additional info for the "Threads" tab */}
                 {tab.label === "Threads" && (
                   <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                    {userInfo?.threads?.length}
+                    {userInfo.threads.length}
                   </p>
                 )}
               </TabsTrigger>
             ))}
           </TabsList>
-          {/* Render tabs content for each profile section */}
           {profileTabs.map((tab) => (
             <TabsContent
               key={`content-${tab.label}`}
               value={tab.value}
               className="w-full text-light-1"
             >
-              {/* Render a component for displaying threads in the selected section */}
-              <ThreadsTabs
+              {/* @ts-ignore */}
+              <ThreadsTab
                 currentUserId={user.id}
                 accountId={userInfo.id}
                 accountType="User"
@@ -73,6 +68,5 @@ const Page = async ({ params }: { params: { id: string } }) => {
       </div>
     </section>
   );
-};
-
-export default Page; 
+}
+export default Page;

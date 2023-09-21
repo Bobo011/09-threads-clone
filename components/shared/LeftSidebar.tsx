@@ -7,56 +7,53 @@ import { SignOutButton, SignedIn, useAuth } from "@clerk/nextjs";
 
 import { sidebarLinks } from "@/constants";
 
-// Define the LeftSidebar component
 const LeftSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Retrieve the userId from the authenticated user
   const { userId } = useAuth();
 
   return (
-    <section className="custom-scrollbar leftsidebar">
-      <div className="flex w-full flex-1 flex-col gap-6 px-6">
+    <section className='custom-scrollbar leftsidebar'>
+      <div className='flex w-full flex-1 flex-col gap-6 px-6'>
         {sidebarLinks.map((link) => {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
             pathname === link.route;
 
-          // If the link route is "/profile," append the userId to it
           if (link.route === "/profile") link.route = `${link.route}/${userId}`;
 
           return (
-            <div key={link.label}>
-              <Link
-                href={link.route}
-                key={link.label}
-                className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
-              >
-                <Image
-                  src={link.imgURL}
-                  alt={link.label}
-                  width={24}
-                  height={24}
-                />
-                <p className="text-light-1 max-lg:hidden">{link.label}</p>
-              </Link>
-            </div>
-          );
-        })}
-      </div>
-      <div className="mt-10 px-6">
-        <SignedIn>
-          {/* Sign Out Button */}
-          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
-            <div className="flex cursor-pointer gap-4 p-4">
+            <Link
+              href={link.route}
+              key={link.label}
+              className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
+            >
               <Image
-                src="/assets/logout.svg"
-                alt="logout"
+                src={link.imgURL}
+                alt={link.label}
                 width={24}
                 height={24}
               />
-              <p className="text-light-2 max-lg:hidden">LogOut</p>
+
+              <p className='text-light-1 max-lg:hidden'>{link.label}</p>
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className='mt-10 px-6'>
+        <SignedIn>
+          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
+            <div className='flex cursor-pointer gap-4 p-4'>
+              <Image
+                src='/assets/logout.svg'
+                alt='logout'
+                width={24}
+                height={24}
+              />
+
+              <p className='text-light-2 max-lg:hidden'>Logout</p>
             </div>
           </SignOutButton>
         </SignedIn>

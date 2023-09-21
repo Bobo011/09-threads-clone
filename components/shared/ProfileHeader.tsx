@@ -11,7 +11,6 @@ interface Props {
   type?: string;
 }
 
-// Define the ProfileHeader component that takes props
 function ProfileHeader({
   accountId,
   authUserId,
@@ -41,8 +40,6 @@ function ProfileHeader({
             <p className="text-base-medium text-gray-1">@{username}</p>
           </div>
         </div>
-        
-        {/* Render the "Edit" button if the logged-in user's accountId matches the profile's accountId */}
         {accountId === authUserId && type !== "Community" && (
           <Link href="/profile/edit">
             <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
@@ -59,10 +56,8 @@ function ProfileHeader({
         )}
       </div>
 
-      {/* Display the user's bio */}
       <p className="mt-6 max-w-lg text-base-regular text-light-2">{bio}</p>
 
-      {/* Render a horizontal line as a separator */}
       <div className="mt-12 h-0.5 w-full bg-dark-3" />
     </div>
   );

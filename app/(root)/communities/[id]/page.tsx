@@ -2,7 +2,7 @@ import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
 import { communityTabs } from "@/constants";
 import UserCard from "@/components/cards/UserCard";
-import ThreadsTab from "@/components/shared/ThreadsTabs";
+import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";

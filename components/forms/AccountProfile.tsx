@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { usePathname, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-// Import UI components and utility functions
+
 import {
   Form,
   FormControl,
@@ -18,9 +18,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-// Import custom hooks and validation schema
+
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
+
 import { UserValidation } from "@/lib/validations/user";
 import { updateUser } from "@/lib/actions/user.actions";
 
@@ -35,14 +36,14 @@ interface Props {
   };
   btnTitle: string;
 }
-// Define the AccountProfile component
+
 const AccountProfile = ({ user, btnTitle }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing("media");
 
   const [files, setFiles] = useState<File[]>([]);
-  // Initialize the form using react-hook-form
+
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: {
@@ -52,7 +53,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       bio: user?.bio ? user.bio : "",
     },
   });
-  // Handle form submission
+
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
 
@@ -64,7 +65,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         values.profile_photo = imgRes[0].fileUrl;
       }
     }
-    // Update user information using the updateUser function
+
     await updateUser({
       name: values.name,
       path: pathname,
@@ -73,14 +74,14 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       bio: values.bio,
       image: values.profile_photo,
     });
-    // Redirect back to the previous page or to the homepage
+
     if (pathname === "/profile/edit") {
       router.back();
     } else {
       router.push("/");
     }
   };
-  // Handle image selection from the file input
+
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
@@ -110,7 +111,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         className="flex flex-col justify-start gap-10"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        {/* Form field for profile photo */}
         <FormField
           control={form.control}
           name="profile_photo"
@@ -148,7 +148,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        {/* Form field for name */}
+
         <FormField
           control={form.control}
           name="name"
@@ -168,7 +168,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        {/* Form field for username */}
+
         <FormField
           control={form.control}
           name="username"
@@ -188,7 +188,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        {/* Form field for bio */}
+
         <FormField
           control={form.control}
           name="bio"
@@ -208,7 +208,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        {/* Submit button */}
+
         <Button type="submit" className="bg-primary-500">
           {btnTitle}
         </Button>
